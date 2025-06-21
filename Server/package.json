@@ -1,0 +1,31 @@
+{
+  "name": "gameserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BAD",
+  "license": "ISC",
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "clone": "^2.1.2",
+    "crypto": "^1.0.1",
+    "dateformat": "^5.0.3",
+    "express": "^4.18.1",
+    "loader": "^2.1.1",
+    "md5": "^2.3.0",
+    "nodemon": "^1.19.4",
+    "npm": "^7.6.3",
+    "request": "^2.88.2",
+    "shortid": "^2.2.15",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "sqlite3": "^5.1.7",
+    "strtotime": "^1.0.0",
+    "vk-live-widget": "^1.0.3",
+    "worker-farm": "^1.7.0",
+    "x-date": "^1.0.2"
+  }
+}
