@@ -57,6 +57,14 @@ io.on('connection', function (socket) {
         pFunc.GetFriends(db, player, socket);
     });
 
+    socket.on('invite_friend', function (friend) {
+        //console.log(`set username ${data.player_id} ${data.username}`);
+        console.log(`Friend invite ${friend.username}`);
+
+        io.to(players[friend.username].id).emit({'invite': { 'where': player.username }});
+        //pFunc.GetFriends(db, player, socket);
+    });
+
     socket.on('disconnect', function () {
 
         socket.broadcast.emit('disconnected', player);
