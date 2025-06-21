@@ -29,6 +29,7 @@ module.exports = {
                         {
                             console.log(`username_init ${player.player_id}`);
                             player.username = rows[0].username;
+                            console.log(rows[0].username);
                             socket.emit('username_init', player);
                         }
                     });
@@ -37,7 +38,8 @@ module.exports = {
                 });
             }
         });
-        return new Promise((resolve, reject) => resolve(player));
+        //console.log(player.id + " " +player.username);
+        //return new Promise((resolve, reject) => resolve(player));
     },
     SetUsername: function (db, data, player, socket) {
         db.all(`select * from User where username == ?`, data.username, (err, rows) => {

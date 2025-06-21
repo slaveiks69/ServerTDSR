@@ -6,7 +6,7 @@ var Player = require('./Modules/Player.js');
 var port = 7777;
 var io = require('socket.io')(process.env.PORT || port);
 
-var players = [];
+var players = {};
 
 let db = new sqlite3.Database("server-data.db", sqlite3.OPEN_READWRITE, (err) => {
     if(err)
@@ -36,13 +36,19 @@ io.on('connection', function (socket) {
     socket.on('init_confirmed', function (data) {
         player.player_id = data.player_id;
         
-        pFunc.SetStatus(db, player, 'online', socket)
-            .then((resolve) => { 
-                if(resolve.username === "")
-                    players[resolve.id] = player;
-                else
-                    players[resolve.username] = player;
-            });
+        pFunc.SetStatus(db, player, 'online', socket);
+    });
+
+    socket.on('past_init', function (data) {
+        console.log(`${data.username}`);
+        if(data.username == "")
+        {
+            players[data.id] = player;
+        }
+        else
+        {
+            players[data.username] = player;
+        }
     });
 
     socket.on('username_set', function (data) {
@@ -61,7 +67,11 @@ io.on('connection', function (socket) {
         //console.log(`set username ${data.player_id} ${data.username}`);
         console.log(`Friend invite ${friend.username}`);
 
-        io.to(players[friend.username].id).emit({'invite': { 'where': player.username }});
+        if(players[friend.username] == undefined) return;
+
+        console.log(players[friend.username].id + " "+ {'invite': { 'where': player }});
+
+        io.to(players[friend.username].id).emit('invite_friend', { 'where': player.username });
         //pFunc.GetFriends(db, player, socket);
     });
 
