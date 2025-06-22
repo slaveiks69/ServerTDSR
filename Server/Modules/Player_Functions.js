@@ -5,7 +5,6 @@ module.exports = {
             {
                 db.exec(`update User set status = '${status}' WHERE id == '${player.player_id}'`);
                 
-                
                 console.log(`username_init ${player.player_id} ${rows[0].mail}`);
                 player.username = rows[0].username;
                 player.mail = rows[0].mail;
@@ -40,6 +39,29 @@ module.exports = {
         });
         //console.log(player.id + " " +player.username);
         //return new Promise((resolve, reject) => resolve(player));
+    },
+    PingMyStatus: function (db, player, io, status) {
+        db.all(`select Friend.id, User.id as 'user_id', User.username, User.status from Friend 
+                inner join User 
+                on Friend.user1 == User.id or Friend.user2 == User.id 
+                where (Friend.user1 == ${player.player_id} or Friend.user2 == ${player.player_id}) 
+                and (username != '${player.username}') and (status == 'online')`, (err, rows) => {
+            if(rows == undefined) return;
+            if(rows.length > 0)
+            {
+                rows.forEach(function (row) {
+                    console.log(players[row.username]);
+                    if(players[row.username] == undefined) return;
+                    console.log('players[row.username]');
+                    io.to(players[row.username].id).emit('ping_from_friend', 
+                        { 
+                            'username': player.username,
+                            'status': status
+                        }
+                    );
+                });
+            }
+        });
     },
     SetUsername: function (db, data, player, socket) {
         db.all(`select * from User where username == ?`, data.username, (err, rows) => {

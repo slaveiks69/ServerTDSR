@@ -19,9 +19,32 @@ let db = new sqlite3.Database("server-data.db", sqlite3.OPEN_READWRITE, (err) =>
     }
 })
 
-//select * from Users where mail == 'damn_p@vk.com'
 
 console.log('Start server');
+
+function PingMyStatus(db, player, io, status) {
+    db.all(`select Friend.id, User.id as 'user_id', User.username, User.status from Friend 
+            inner join User 
+            on Friend.user1 == User.id or Friend.user2 == User.id 
+            where (Friend.user1 == ${player.player_id} or Friend.user2 == ${player.player_id}) 
+            and (username != '${player.username}') and (status == 'online')`, (err, rows) => {
+        if(rows == undefined) return;
+        if(rows.length > 0)
+        {
+            rows.forEach(function (row) {
+                console.log(players[row.username]);
+                if(players[row.username] == undefined) return;
+                console.log('players[row.username]');
+                io.to(players[row.username].id).emit('ping_from_friend', 
+                    { 
+                        'username': player.username,
+                        'status': status
+                    }
+                );
+            });
+        }
+    });
+}
 
 io.on('connection', function (socket) {
 
@@ -48,7 +71,9 @@ io.on('connection', function (socket) {
         else
         {
             players[data.username] = player;
+            console.log(players[data.username]);
         }
+        PingMyStatus(db, player, io, 'online');
     });
 
     socket.on('username_set', function (data) {
@@ -58,24 +83,40 @@ io.on('connection', function (socket) {
     });
 
     socket.on('get_friend_list', function (data) {
-        //console.log(`set username ${data.player_id} ${data.username}`);
- 
+
         pFunc.GetFriends(db, player, socket);
     });
 
-    socket.on('invite_friend', function (friend) {
-        //console.log(`set username ${data.player_id} ${data.username}`);
-        console.log(`Friend invite ${friend.username}`);
+    socket.on('invite_friend', function (invite) {
+        console.log(`${invite.where_username} invite friend ${invite.to_username} to ${invite.photon_room}`);
 
-        if(players[friend.username] == undefined) return;
+        if(players[invite.to_username] == undefined) return;
 
-        console.log(players[friend.username].id + " "+ {'invite': { 'where': player }});
+        io.to(players[invite.to_username].id).emit('invite_friend', 
+            { 
+                'where_username': invite.where_username,
+                'to_username': invite.to_username,
+                'photon_room': invite.photon_room
+            }
+        );
+    });
 
-        io.to(players[friend.username].id).emit('invite_friend', { 'where': player.username });
-        //pFunc.GetFriends(db, player, socket);
+    socket.on('invite_decline', function (invite) {
+        console.log(`${invite.to_username} decline invite ${invite.where_username}`);
+    
+        if(players[invite.where_username] == undefined) return;
+
+        io.to(players[invite.where_username].id).emit('invite_decline', 
+            { 
+                'where_username': invite.where_username,
+                'to_username': invite.to_username,
+                'photon_room': invite.photon_room
+            }
+        );
     });
 
     socket.on('disconnect', function () {
+        PingMyStatus(db, player, io, 'offline');
 
         socket.broadcast.emit('disconnected', player);
 
