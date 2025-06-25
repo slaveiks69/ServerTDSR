@@ -5,11 +5,9 @@ var Player = require('./Modules/Player.js');
 
 var port = 7777;
 
-var http = require('http').createServer().listen(port, '0.0.0.0');
+var io = require('socket.io')(process.env.PORT || port);
 
-var io = require('socket.io').listen(http);
-
-//console.log(io)
+console.log(io)
 
 var players = {};
 
