@@ -5,14 +5,14 @@ var Player = require('./Modules/Player.js');
 
 var port = 7777;
 
-//var io = require('socket.io')(process.env.PORT || port);
-var Server = require('socket.io');
-var http = require('http');
-const httpServer = http.createServer();
+var io = require('socket.io')(process.env.PORT || port);
+//var Server = require('socket.io');
+//var http = require('http');
+//const httpServer = http.createServer();
 
-const io = new Server(httpServer, {
+//const io = new Server(httpServer, {
     // options
-});
+//});
 
 
 ///const io = require('socket.io');
@@ -180,4 +180,4 @@ io.on('connection', function (socket) {
 
 
 
-httpServer.listen(port, '0.0.0.0');
+//httpServer.listen(port, '0.0.0.0');
