@@ -1,5 +1,3 @@
-var shortID = require('shortid');
-
 module.exports = class secure {
     constructor(){
         this.id = '';
