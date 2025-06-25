@@ -4,7 +4,12 @@ var pFunc = require('./Modules/Player_Functions.js');
 var Player = require('./Modules/Player.js');
 
 var port = 7777;
-var io = require('socket.io')(process.env.PORT || port);
+
+var http = require('http').createServer().listen(port, '0.0.0.0');
+
+var io = require('socket.io').listen(http);
+
+//console.log(io)
 
 var players = {};
 
