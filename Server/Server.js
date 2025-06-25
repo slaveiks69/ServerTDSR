@@ -6,20 +6,6 @@ var Player = require('./Modules/Player.js');
 var port = 7777;
 
 var io = require('socket.io')(process.env.PORT || port);
-//var Server = require('socket.io');
-//var http = require('http');
-//const httpServer = http.createServer();
-
-//const io = new Server(httpServer, {
-    // options
-//});
-
-
-///const io = require('socket.io');
-
-//const socket = io('http://localhost:7777');
-
-//console.log(io)
 
 var players = {};
 
