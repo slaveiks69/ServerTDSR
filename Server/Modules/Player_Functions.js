@@ -7,6 +7,10 @@ module.exports = {
                 console.log(`username_init ${player.player_id} ${rows[0].mail}`);
                 player.username = rows[0].username;
                 player.mail = rows[0].mail;
+
+                player.money = rows[0].money;
+                player.gems = rows[0].gems;
+
                 socket.emit('username_init', player);
 
                 console.log(`player ${player.player_id} get status ${status}`);
@@ -24,8 +28,14 @@ module.exports = {
                     db.all(`select * from User where id == ?`, player.player_id, (err, rows) => {
                         if (rows.length > 0) {
                             console.log(`username_init ${player.player_id}`);
+
                             player.username = rows[0].username;
+
+                            player.money = rows[0].money;
+                            player.gems = rows[0].gems;
+
                             console.log(rows[0].username);
+
                             socket.emit('username_init', player);
                         }
                     });

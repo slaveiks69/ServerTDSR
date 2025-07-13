@@ -4,6 +4,9 @@ module.exports = class secure {
         this.player_id = '';
         this.mail = '';
         this.username = '';
+        this.isAdmin = '';
+        this.money = '';
+        this.gems = '';
     }
 }
 
