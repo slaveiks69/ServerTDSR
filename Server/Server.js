@@ -1,5 +1,3 @@
-
-const sqlite3 = require('sqlite3');
 var pFunc = require('./Modules/Player_Functions.js');
 var Players = require('./Modules/Players.js');
 var Player = require('./Modules/Player.js');
@@ -10,15 +8,19 @@ var io = require('socket.io')(process.env.PORT || port);
 
 var players = new Players();
 
-let db = new sqlite3.Database("server-data.db", sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {
-        console.log("Error Occurred - " + err.message);
-    }
-    else {
-        console.log("DataBase Connected");
-    }
-})
+const pgp = require('pg-promise')();
 
+const db = pgp({
+    user: 'service',
+    host: 'localhost',
+    database: 'topdownshooter',
+    password: 'sperma',
+    port: 5432
+});
+
+db.any('SELECT NOW()')
+  .then(data => console.log('Database connect', data[0].now))
+  .catch(error => console.log('Database error', error));
 
 console.log('Start server');
 
@@ -34,22 +36,26 @@ io.on('connection', function (socket) {
     socket.on('init_confirmed', function (data) {
         player.player_id = data.player_id;
 
-        pFunc.SetStatus(db, player, 'online', socket);
+        pFunc.GetUser(db, player, true, socket);
     });
 
     socket.on('past_init', function (data) {
-        console.log(`${data.username}`);
+        console.log(`username: ${data.username}`);
         if (data.username == "") {
             players.List[data.id] = player;
         }
         else {
+            if(players.List[player.id] != undefined)
+                delete players.List[player.id];
             players.List[data.username] = player;
             console.log(players.List[data.username]);
         }
+        //console.log(players);
         pFunc.PingMyStatus(db, player, io, 'online', players);
     });
 
     socket.on('username_set', function (data) {
+        console.log(data);
         console.log(`set username ${data.player_id} ${data.username}`);
 
         pFunc.SetUsername(db, data, player, socket);
@@ -116,7 +122,7 @@ io.on('connection', function (socket) {
             delete players.List[player.username];
         }
 
-        pFunc.SetStatus(db, player, 'offline', socket);
+        pFunc.GetUser(db, player, false, socket);
         console.log("disconnected player: " + player.username);
     });
 
