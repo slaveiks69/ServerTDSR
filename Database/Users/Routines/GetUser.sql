@@ -20,7 +20,7 @@ BEGIN
         INSERT INTO users.player(status) VALUES ('online') RETURNING player_id INTO _player_id;
     END IF;
 
-    SELECT JSON_AGG(ROW_TO_JSON(res))
+    SELECT ROW_TO_JSON(res)
     FROM (SELECT *
           FROM users.player
           WHERE player_id = _player_id) res

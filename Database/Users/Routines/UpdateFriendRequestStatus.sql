@@ -11,7 +11,7 @@ BEGIN
         RETURN;
     END IF;
 
-    INSERT INTO users.friends(player_id, friend_id) values (_player_id,_possible_friend_id);
+    INSERT INTO users.friends(player_id, friend_id) values (_player_id,_possible_friend_id) ON CONFLICT DO NOTHING;
 
     RETURN;
 END;
