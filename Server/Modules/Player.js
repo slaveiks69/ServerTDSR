@@ -4,7 +4,7 @@ module.exports = class secure {
         this.player_id = '';
         this.mail = '';
         this.username = '';
-        this.isAdmin = '';
+        this.privilege_id = '';
         this.money = '';
         this.gems = '';
     }
