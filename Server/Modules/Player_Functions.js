@@ -17,6 +17,8 @@ module.exports = {
 
                     player.money = json_object.money;
                     player.gems = json_object.gems;
+
+                    player.privilege_id = json_object.privilege_id;
                 }
             })
             .catch(error => console.log('Database error', error))
