@@ -1,4 +1,18 @@
 module.exports = {
+    AddMoney: function (db, player, money, socket) {
+        db.any(`SELECT * FROM users.addmoney(${player.player_id}, ${money});`)
+            .then(data => {
+                var json_object = data[0].addmoney;
+
+                //console.log(json_object)
+
+                if (json_object != null) {
+                    player.money = json_object.money;
+                }
+            })
+            .catch(error => console.log('Database error', error))
+            .then(() => socket.emit('money_update_info', player));
+    },
     GetUser: function (db, player, is_join, socket) {
         if (player.player_id == "")
             player.player_id = null;

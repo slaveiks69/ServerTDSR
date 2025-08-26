@@ -113,6 +113,17 @@ io.on('connection', function (socket) {
         );
     });
 
+
+
+    socket.on('add_money', function (data) {
+        console.log(data);
+        console.log(`add money ${data.player_id} ${data.money}`);
+
+        pFunc.AddMoney(db, player, data.money, socket);
+    });
+
+
+    
     socket.on('disconnect', function () {
         pFunc.PingMyStatus(db, player, io, 'offline', players);
 
