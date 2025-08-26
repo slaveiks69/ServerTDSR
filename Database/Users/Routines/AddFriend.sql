@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION users.AddFriend(_player_id uuid, _possible_friend_id INT)
+CREATE OR REPLACE FUNCTION users.AddFriend(_player_id uuid, _possible_friend_id uuid)
     RETURNS JSON
     SECURITY DEFINER
     LANGUAGE plpgsql
