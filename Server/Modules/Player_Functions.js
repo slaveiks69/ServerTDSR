@@ -10,7 +10,7 @@ module.exports = {
                 //console.log(json_object)
 
                 if (json_object != null) {
-                    player.player_id = json_object.player_id;
+                    player.player_id = json_object.player_uuid;
 
                     player.username = json_object.username;
                     player.mail = json_object.mail;
