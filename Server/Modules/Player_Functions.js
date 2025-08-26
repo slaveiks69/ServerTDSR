@@ -2,16 +2,12 @@ module.exports = {
     GetUser: function (db, player, is_join, socket) {
         if (player.player_id == "")
             player.player_id = null;
+        else
+            player.player_id = "'" + player.player_id + "'"
 
         console.log('\nplayer.player_id' + player.player_id + '\n');
 
-        let player_id = '';
-        if(player.player_id == null)
-            player_id = 'null';
-        else
-            player_id = "'"+player.player_id+"'";
-
-        db.any(`SELECT * FROM users.getuser(${player_id}, ${is_join});`)
+        db.any(`SELECT * FROM users.getuser(${player.player_id}, ${is_join});`)
             .then(data => {
                 var json_object = data[0].getuser;
 
