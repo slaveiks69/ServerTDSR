@@ -27,7 +27,13 @@ module.exports = {
             .then(() => socket.emit('username_init', player));
     },
     SetUsername: function (db, data, player, socket) {
-        db.any(`SELECT * FROM users.setusername('${player.player_id}', '${data.username}');`)
+        let player_id = '';
+        if(player.player_id == 'null')
+            player_id = 'null';
+        else
+            player_id = "'"+player.player_id+"'";
+
+        db.any(`SELECT * FROM users.setusername(${player_id}, '${data.username}');`)
             .then(dbdata => {
                 var json_object = dbdata[0].setusername;
 
