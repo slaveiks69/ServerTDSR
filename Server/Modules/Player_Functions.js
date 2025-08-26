@@ -3,9 +3,9 @@ module.exports = {
         if (player.player_id == "")
             player.player_id = null;
 
-        console.log('\nplayer.player_id' + player.player_id + '\m');
+        console.log('\nplayer.player_id' + player.player_id + '\n');
 
-        db.any(`SELECT * FROM users.getuser(${player.player_id}, ${is_join});`)
+        db.any(`SELECT * FROM users.getuser('${player.player_id}', ${is_join});`)
             .then(data => {
                 var json_object = data[0].getuser;
 
