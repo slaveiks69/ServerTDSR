@@ -27,7 +27,7 @@ module.exports = {
             .then(() => socket.emit('username_init', player));
     },
     SetUsername: function (db, data, player, socket) {
-        db.any(`SELECT * FROM users.setusername(${player.player_id}, '${data.username}');`)
+        db.any(`SELECT * FROM users.setusername('${player.player_id}', '${data.username}');`)
             .then(dbdata => {
                 var json_object = dbdata[0].setusername;
 
@@ -48,7 +48,7 @@ module.exports = {
             .then(send => { if (send == 1) socket.emit('username_init', player) });
     },
     GetFriends: function (db, player, socket) {
-        db.any(`SELECT * FROM users.getfriends(${player.player_id});`)
+        db.any(`SELECT * FROM users.getfriends('${player.player_id}');`)
             .then(data => {
                 console.log('GetFriends');
                 socket.emit('friend_list', { 'list': data[0].getfriends.list });
@@ -56,14 +56,14 @@ module.exports = {
             .catch(error => console.log('Database error', error));
     },
     GetFriendsRequest: function (db, player, socket) {
-        db.any(`SELECT * FROM users.getfriendsrequest(${player.player_id});`)
+        db.any(`SELECT * FROM users.getfriendsrequest('${player.player_id}');`)
             .then(data => {
                 socket.emit('request_friend_list', { 'list': data[0].getfriendsrequest.list });
             })
             .catch(error => console.log('Database error', error));
     },
     DeclineFriendRequest: function (db, data) {
-        db.any(`SELECT * FROM users.updatefriendrequeststatus(${data.user_id}, ${player.player_id}, false);`)
+        db.any(`SELECT * FROM users.updatefriendrequeststatus('${data.user_id}', '${player.player_id}', false);`)
             .then(dbdata => {})
             .catch(error => console.log('Database error', error));
     },
@@ -77,7 +77,7 @@ module.exports = {
             .catch(error => console.log('Database error', error));
     },
     PingMyStatus: function (db, player, io, status, players) {
-        db.any(`SELECT * FROM users.getfriends(${player.player_id}, 'online');`)
+        db.any(`SELECT * FROM users.getfriends('${player.player_id}', 'online');`)
             .then(data => {
                 var json_objects = data[0].getfriends.list;
 
@@ -99,7 +99,7 @@ module.exports = {
             .catch(error => console.log('Database error', error));
     },
     AddFriend: function (db, player, data, io, players) {
-        db.any(`SELECT * FROM users.addfriend(${player.player_id}, ${data.user_id});`)
+        db.any(`SELECT * FROM users.addfriend('${player.player_id}', '${data.user_id}');`)
             .then(dbdata => {
                 var json_object = dbdata[0].addfriend;
 
@@ -123,7 +123,7 @@ module.exports = {
             });
     },
     AcceptFriendRequest: function (db, player, data, socket, io, players) {
-        db.any(`SELECT * FROM users.updatefriendrequeststatus(${data.user_id}, ${player.player_id}, true);`)
+        db.any(`SELECT * FROM users.updatefriendrequeststatus('${data.user_id}', '${player.player_id}', true);`)
             .then(dbdata => {
                 socket.emit('friend_list_update');
 
