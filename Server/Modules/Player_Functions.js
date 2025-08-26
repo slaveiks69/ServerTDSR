@@ -5,7 +5,13 @@ module.exports = {
 
         console.log('\nplayer.player_id' + player.player_id + '\n');
 
-        db.any(`SELECT * FROM users.getuser('${player.player_id}', ${is_join});`)
+        let player_id = '';
+        if(player.player_id == 'null')
+            player_id = 'null';
+        else
+            player_id = "'"+player.player_id+"'";
+
+        db.any(`SELECT * FROM users.getuser(${player_id}, ${is_join});`)
             .then(data => {
                 var json_object = data[0].getuser;
 
@@ -27,13 +33,9 @@ module.exports = {
             .then(() => socket.emit('username_init', player));
     },
     SetUsername: function (db, data, player, socket) {
-        let player_id = '';
-        if(player.player_id == 'null')
-            player_id = 'null';
-        else
-            player_id = "'"+player.player_id+"'";
+        
 
-        db.any(`SELECT * FROM users.setusername(${player_id}, '${data.username}');`)
+        db.any(`SELECT * FROM users.setusername(${player.player_id}, '${data.username}');`)
             .then(dbdata => {
                 var json_object = dbdata[0].setusername;
 
