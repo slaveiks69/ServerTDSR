@@ -6,7 +6,7 @@ module.exports = {
         console.log('\nplayer.player_id' + player.player_id + '\n');
 
         let player_id = '';
-        if(player.player_id == 'null')
+        if(player.player_id == null)
             player_id = 'null';
         else
             player_id = "'"+player.player_id+"'";
