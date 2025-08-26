@@ -1,6 +1,6 @@
 module.exports = {
     AddMoney: function (db, player, money, socket) {
-        db.any(`SELECT * FROM users.addmoney(${player.player_id}, ${money});`)
+        db.any(`SELECT * FROM users.addmoney('${player.player_id}', ${money});`)
             .then(data => {
                 var json_object = data[0].addmoney;
 
