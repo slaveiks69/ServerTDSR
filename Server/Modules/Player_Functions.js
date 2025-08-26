@@ -3,7 +3,7 @@ module.exports = {
         if (player.player_id == "")
             player.player_id = null;
 
-        console.log('player.player_id' + player.player_id);
+        console.log('\nplayer.player_id' + player.player_id + '\m');
 
         db.any(`SELECT * FROM users.getuser(${player.player_id}, ${is_join});`)
             .then(data => {
