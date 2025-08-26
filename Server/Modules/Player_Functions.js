@@ -1,7 +1,9 @@
 module.exports = {
     GetUser: function (db, player, is_join, socket) {
-        if (player.player_id == 0)
+        if (player.player_id == "")
             player.player_id = null;
+
+        console.log('player.player_id' + player.player_id);
 
         db.any(`SELECT * FROM users.getuser(${player.player_id}, ${is_join});`)
             .then(data => {
